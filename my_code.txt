@@ -1,0 +1,60 @@
+def compute_distance(a, b):
+    logging.debug("entered compute")
+    def gen_tuples(n_rows, n_cols):
+        row = col = 0
+        while row <= n_rows and col <= n_cols:
+            for i in range(row, n_rows + 1):
+                yield (i, col)
+
+            for j in range(col + 1, n_cols + 1):
+                yield (row, j)
+
+            row += 1
+            col += 1
+
+    def find_prev(i, j):
+        prev = []
+        if i > 0:
+            prev.append(DTW_mat[i - 1][j])
+        if j > 0:
+            prev.append(DTW_mat[i][j - 1])
+            if i > 0:
+                prev.append(DTW_mat[i - 1][j - 1])
+        logging.debug("found prev of " + str((i, j)) + " to be " + str(prev))
+        return prev
+
+    def point_distance(point_a, point_b):
+        p_dist = 0
+        for i in range(len(point_a)):
+            p_dist += (point_a[i] - point_b[i])**2
+        logging.debug("Computed distance as: " + str(p_dist))
+        return p_dist
+
+    distance = 0
+    ##### memeke color
+    ##### castled
+    ##### result
+
+    #compute DTW path
+    # a, b = a[3:], b[3:]
+    DTW_mat = np.zeros((len(a), len(b)))
+
+    for i,j in gen_tuples(len(a) - 1, len(b) - 1):
+        prev = find_prev(i, j)
+        DTW_mat[i][j] = point_distance(a[i], b[j]) + min(prev, default=0)
+        logging.debug("DTW state is: " + str(DTW_mat))
+
+    #work backwards to find total distance
+    while i+j > 0:
+        prev = find_prev(i, j)
+        prev_min = min(prev)
+        if i > 0 and DTW_mat[i - 1][j] == prev_min:
+            i -= 1
+        elif j > 0 and DTW_mat[i][j - 1] == prev_min:
+            j -= 1
+        else:
+            i -= 1
+            j -= 1
+        distance += prev_min
+        logging.debug("Curr dist: " + str(distance) + ", iter: " + str((i, j)))
+    return distance

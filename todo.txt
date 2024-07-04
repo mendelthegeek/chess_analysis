@@ -1,0 +1,11 @@
+some ideas of random metrics to look at, most are probably junk but maybe they produce something interesting:
+
+-How often do players win if they make more white square moves than black square moves?
+
+-Which moves are most highly correlated to winning (and losing). Strip the # off the move of course.
+
+-Create a distribution for each piece which shows number of games won/lost when this piece first moved at move N (like a stacked bar graph).
+
+-compute average number of squares controlled by the winning side in a game (normalized by turn length per game)
+
+-Similar to above, but create a metric for protecting your own pieces and find out how important it is for winning. Like two rooks next to each both protect eachother, but one pawn protecting another might only count as 1.
